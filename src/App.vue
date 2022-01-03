@@ -1,28 +1,39 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="vue-template">
+    <Nav />
+    <div class="App">
+      <div class="vertical-center">
+        <div class="inner-block">
+          <router-view />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Nav from './components/Nav.vue';
+import axios from "axios";
+//const regeneratorRuntime = require("regenerator-runtime");
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    Nav,
+  },
+  async beforeUpdate() {
+    try {
+      const response = await axios.get("user")
+      //console.log("Response in App: ", response)
+      await this.$store.dispatch('user', response.data)
+    } catch (e) {
+      //console.log("Error ", e)
+      await this.$store.dispatch('user', '')
+    }
   }
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+
 </style>

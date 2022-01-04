@@ -20,7 +20,7 @@
         <router-link to="/forgot-password">Forgot password ?</router-link>
       </p>
     </form>
-    <div class="alert" v-if="error">
+    <div class="alert alert-danger" v-if="error">
       <p>
         <strong> Error!</strong> Please enter valid login credentials!
       </p>

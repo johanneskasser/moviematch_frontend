@@ -16,6 +16,8 @@ import Nav from './components/Nav.vue';
 import axios from "axios";
 //const regeneratorRuntime = require("regenerator-runtime");
 
+//Vue.use(TabsPlugin)
+
 export default {
   name: 'App',
   components: {

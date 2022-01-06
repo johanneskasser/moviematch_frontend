@@ -3,14 +3,14 @@ import App from './App.vue'
 import router from "./router.js"
 import './axios'
 import store from './store/vuex'
-import VuePromiseBtn from "vue-promise-btn"
+import {TabsPlugin} from 'bootstrap-vue'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 import '@/assets/css/main.css'
 
 Vue.config.productionTip = false
 
-Vue.use(VuePromiseBtn, {})
+Vue.use(TabsPlugin)
 
 new Vue({
   router,

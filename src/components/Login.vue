@@ -20,10 +20,9 @@
         <router-link to="/forgot-password">Forgot password ?</router-link>
       </p>
     </form>
-    <div class="alert alert-danger" v-if="error">
-      <p>
-        <strong> Error!</strong> Please enter valid login credentials!
-      </p>
+    <div class="alert alert-danger alert-dismissible fade show" v-if="error">
+      <strong> Error!</strong> Please enter valid login credentials!
+      <button type="button" class="btn-close" data-bs-dismiss="alert" @click="disableButton"></button>
     </div>
   </div>
 
@@ -62,6 +61,9 @@ export default {
       } catch (e) {
         this.error = true
       }
+    },
+    disableButton(){
+      this.error = false
     }
   }
 }

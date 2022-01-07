@@ -5,6 +5,7 @@ import Login from "./components/Login.vue";
 import Register from "./components/Register";
 import ForgotPassword from "@/components/ForgotPassword";
 import Reset from "@/components/Reset";
+import store from "@/store/vuex";
 
 Vue.use(Router);
 
@@ -13,7 +14,14 @@ export default new Router ({
     routes: [
         {
             path: '/',
-            component: Home
+            component: Home,
+            beforeEnter: (to, from, next) => {
+                if(store.state.user === null) {
+                    next('/login');
+                } else {
+                    next();
+                }
+            }
         },
         {
             path: '/login',

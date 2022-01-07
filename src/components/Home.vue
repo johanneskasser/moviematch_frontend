@@ -30,7 +30,7 @@
                   <rect x="0" y="88" rx="3" ry="3" width="178" height="6" />
                   <circle cx="20" cy="20" r="20" />
                 </content-loader>
-                <div class="userDisplay alert-success" v-if="!searching && success">
+                <div class="userDisplay alert-success overflow-auto pre-scrollable" v-if="!searching && success">
                   <p>Name: {{this.searched_user.username}} <br>
                     Email: {{this.searched_user.email}}</p>
                   <div class="button_alignment buttons btn-group-vertical">
@@ -47,7 +47,7 @@
           </b-tab>
           <b-tab title="Friend requests" @click="refreshFriends(false)">
             <b-card-text>
-              <div class="container">
+              <div class="container overflow-auto pre-scrollable">
                 <div v-for="user in this.requested_friends" :key="user.username" class="alert alert-info">
                   <p>
                     Name: {{user.username}} <br> Email: {{user.email}}
@@ -67,7 +67,7 @@
           </b-tab>
           <b-tab title="Friends" @click="refreshFriends(true)">
             <b-card-text>
-              <div class="container">
+              <div class="container overflow-auto pre-scrollable">
                 <div v-for="user in this.friends" :key="user.username" class="alert alert-info">
                   <p>
                     Name: {{user.username}} <br> Email: {{user.email}}
@@ -154,20 +154,34 @@ export default {
       this.success = false
     },
     async refreshFriends(accepted) {
+      let yourFriends = null
+      if(accepted) {
+        yourFriends = this.user._id;
+      }
       try {
         const response = await axios.get("/getFriends", {
           params: {
             id: this.user._id,
+            yourFriends: yourFriends,
             accepted: accepted
           }
         })
         for (let i = 0; i < response.data.length; i++) {
           try {
-            let user = await axios.get("/getUser", {
-              params: {
-                id: response.data[i].requestingFriend
-              }
-            })
+            let user = ''
+            if(response.data[i].requestingFriend === this.user._id){
+              user = await axios.get("/getUser", {
+                params: {
+                  id: response.data[i].requestedFriend
+                }
+              })
+            } else {
+              user = await axios.get("/getUser", {
+                params: {
+                  id: response.data[i].requestingFriend
+                }
+              })
+            }
             //console.log(user)
             if(accepted) {
               if(!controller.checkDuplicate(user.data, this.friends)){
@@ -182,13 +196,13 @@ export default {
             console.log(e)
           }
         }
-        //console.log(this.friends)
+        console.log(this.friends)
       } catch(e) {
         console.log(e)
       }
     },
     async manageFriendship(accept, requestingFriend) {
-      console.log(accept, requestingFriend, this.user._id)
+      //console.log(accept, requestingFriend, this.user._id)
       try {
         await axios.put('/manageFriendship', {
           requestingFriend: requestingFriend,
@@ -220,5 +234,9 @@ export default {
   .buttons {
     width: 100%;
     margin-bottom: 5%;
+  }
+  .pre-scrollable {
+    max-height: 30rem;
+    overflow-y: scroll;
   }
 </style>

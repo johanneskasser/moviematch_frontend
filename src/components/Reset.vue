@@ -16,15 +16,13 @@
 
       <button type="submit" class="btn btn-dark btn-lg btn-block button_alignment">Change Password</button>
     </form>
-    <div class="alert alert-danger" v-if="pw_error">
-      <p>
-        <strong> Error!</strong> Passwords do not match!
-      </p>
+    <div class="alert alert-danger alert-dismissible fade show" v-if="pw_error">
+      <strong> Error!</strong> Passwords do not match!
+      <button type="button" class="btn-close" data-bs-dismiss="alert" @click="disableButton"></button>
     </div>
-    <div class="alert alert-danger" v-if="error">
-      <p>
-        <strong> Error!</strong> Token has expired! Please try again!
-      </p>
+    <div class="alert alert-danger alert-dismissible fade show" v-if="error">
+      <strong> Error!</strong> Token has expired! Please try again!
+      <button type="button" class="btn-close" data-bs-dismiss="alert" @click="disableButton"></button>
     </div>
   </div>
 </template>
@@ -66,6 +64,10 @@ export default {
       } catch (e) {
           this.error = true
       }
+    },
+    disableButton(){
+      this.pw_error = false;
+      this.error = false
     }
   }
 }

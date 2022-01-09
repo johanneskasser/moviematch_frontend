@@ -10,7 +10,10 @@
           <router-link to="/register" class="btn btn-outline-primary">Sign Up</router-link>
         </li>
       </ul>
-      <ul class="navbar-nav ml-auto" v-if="user">
+      <ul class="nav navbar-nav flex-row float-right" v-if="user">
+        <li class="nav-item">
+          <router-link to="/login" class="btn btn-outline-primary navbar_button">Previous Matches</router-link>
+        </li>
         <li class="nav-item">
           <router-link @click.native="logout" to="/login" class="btn btn-outline-primary">Logout</router-link>
         </li>
@@ -27,7 +30,11 @@ import {mapGetters} from 'vuex'
 
 export default {
   name: 'Nav',
-  //props: ['user'],
+  computed: {
+    ...mapGetters({
+      user: 'user'
+    })
+  },
   methods: {
     async logout() {
       await axios({
@@ -38,11 +45,6 @@ export default {
       })
       //await this.$store.dispatch('user', '')
     }
-  },
-  computed: {
-    ...mapGetters({
-      user: 'user'
-    })
   }
 }
 

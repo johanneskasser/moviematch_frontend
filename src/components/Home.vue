@@ -74,7 +74,7 @@
                   </p>
                   <div class="container btn-group">
                     <button type="button" class="btn btn-outline-success">Start Matching!</button>
-                    <button type="button" class="btn btn-outline-danger">Delete Friend</button>
+                    <button type="button" class="btn btn-outline-danger" @click="deleteFriendship(user._id)">Delete Friend</button>
                   </div>
                 </div>
                 <div class="alert alert-danger" v-if="this.friends.length === 0">
@@ -155,6 +155,8 @@ export default {
     },
     async refreshFriends(accepted) {
       let yourFriends = null
+      this.friends = []
+      this.requested_friends = []
       if(accepted) {
         yourFriends = this.user._id;
       }
@@ -182,6 +184,7 @@ export default {
                 }
               })
             }
+            user = Object.assign({friendshipID: response.data[i]._id}, user)
             //console.log(user)
             if(accepted) {
               if(!controller.checkDuplicate(user.data, this.friends)){
@@ -212,6 +215,18 @@ export default {
         let index = controller.toErase(requestingFriend, this.user._id, this.requested_friends)
         this.requested_friends.splice(index, 1)
         await this.refreshFriends(accept)
+      } catch (e) {
+        console.log(e)
+      }
+    },
+    async deleteFriendship(memberID) {
+      try {
+        await axios.delete('/delete-friendship', {
+          params: {
+            a: memberID,
+            b: this.user._id
+          }
+        })
       } catch (e) {
         console.log(e)
       }

@@ -9,15 +9,14 @@
       </div>
       <button type="submit" class="btn btn-dark btn-lg btn-block button_alignment">Reset Password</button>
     </form>
-    <div class="alert alert-danger" v-if="error">
-      <p>
-        <strong> Error!</strong> User does not exist!
-      </p>
+
+    <div class="alert alert-danger alert-dismissible fade show" v-if="error">
+       <strong> Error!</strong> User does not exist!
+      <button type="button" class="btn-close" data-bs-dismiss="alert" @click="disableButton"></button>
     </div>
-    <div class="alert alert-success" v-if="success">
-      <p>
-        <strong> Success!</strong> Please check your Emails!
-      </p>
+    <div class="alert alert-success alert-dismissible fade show" v-if="success">
+      <strong> Success!</strong> Please check your Emails!
+      <button type="button" class="btn-close" data-bs-dismiss="alert" @click="disableButton"></button>
     </div>
   </div>
 
@@ -52,6 +51,10 @@ export default {
       } catch (e) {
         this.error = true
       }
+    },
+    disableButton(){
+      this.success = false;
+      this.error = false
     }
   }
 }

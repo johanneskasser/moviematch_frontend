@@ -15,6 +15,9 @@
           <router-link to="/login" class="btn btn-outline-primary navbar_button">Previous Matches</router-link>
         </li>
         <li class="nav-item">
+          <router-link to="/yourProfile" class="btn btn-outline-primary navbar_button">Your Profile</router-link>
+        </li>
+        <li class="nav-item">
           <router-link @click.native="logout" to="/login" class="btn btn-outline-primary">Logout</router-link>
         </li>
       </ul>

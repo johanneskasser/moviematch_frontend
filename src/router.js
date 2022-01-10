@@ -8,6 +8,7 @@ import Reset from "@/components/Reset";
 import store from "@/store/vuex";
 import InitMatch from "@/components/InitMatch";
 import Match from "@/components/Match"
+import YourProfile from "@/components/YourProfile";
 
 Vue.use(Router);
 
@@ -48,6 +49,10 @@ export default new Router ({
         {
             path: '/match/:userID/:matchUserID/:genreID/:init',
             component: Match
+        },
+        {
+            path: '/yourProfile',
+            component: YourProfile
         }
     ]
 });

@@ -6,6 +6,8 @@ import Register from "./components/Register";
 import ForgotPassword from "@/components/ForgotPassword";
 import Reset from "@/components/Reset";
 import store from "@/store/vuex";
+import InitMatch from "@/components/InitMatch";
+import Match from "@/components/Match"
 
 Vue.use(Router);
 
@@ -38,6 +40,14 @@ export default new Router ({
         {
             path: '/passwordReset/:token/:id',
             component: Reset
+        },
+        {
+            path: '/initmatch/:userID/:matchUserID/',
+            component: InitMatch
+        },
+        {
+            path: '/match/:userID/:matchUserID/:genreID/:init',
+            component: Match
         }
     ]
 });

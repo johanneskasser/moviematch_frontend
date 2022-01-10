@@ -73,7 +73,7 @@
                     Name: {{user.username}} <br> Email: {{user.email}}
                   </p>
                   <div class="container btn-group">
-                    <button type="button" class="btn btn-outline-success">Start Matching!</button>
+                    <button type="button" class="btn btn-outline-success" @click="match(user._id)">Start Matching!</button>
                     <button type="button" class="btn btn-outline-danger" @click="deleteFriendship(user._id)">Delete Friend</button>
                   </div>
                 </div>
@@ -230,6 +230,10 @@ export default {
       } catch (e) {
         console.log(e)
       }
+      await this.refreshFriends(true)
+    },
+    match(matchUserID) {
+      this.$router.push('/initmatch/${userID}/${matchUserID}'.replace('${userID}', this.user._id).replace('${matchUserID}', matchUserID))
     }
 
   }

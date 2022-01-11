@@ -13,7 +13,7 @@
 <script>
 import axios from "axios";
 
-let counter = 0; // Am Ende resetten!
+let counter = 0;
 export default {
   name: "Match",
   data() {

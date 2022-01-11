@@ -25,9 +25,9 @@ export default {
       movies: [],
       curr_image: "",
       curr_title: "",
-      curr_id: "",
       liked_movies: [],
-      disliked_movies: []
+      disliked_movies: [],
+      moviesToDisplay: []
     }
   },
   async mounted() {
@@ -46,12 +46,14 @@ export default {
   },
   methods: {
     changeMovie(like) {
+      this.moviesToDisplay.push(this.movies.data.results[counter].id)
       if(counter > 9) {
         //TODO: Axios request an das Backend mit dem Liked und Disliked Array
         this.$router.push('/')
       }
       if(like) {
         this.liked_movies.push(this.movies.data.results[counter].id)
+
       } else if(!like) {
         this.disliked_movies.push(this.movies.data.results[counter].id)
       }

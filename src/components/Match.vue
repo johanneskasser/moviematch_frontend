@@ -69,8 +69,12 @@ export default {
     align-content: center;
   }
 
-
   .transparent_div {
+    display: none;
+  }
+
+  .image:hover + .transparent_div {
+    display: block;
     background-color: rgba(0,0,0,0.65);
     position: absolute;
     text-align: center;
@@ -80,6 +84,36 @@ export default {
     color: #FFF;
     bottom: 0;
     z-index: 1;
+    animation: fadeIn linear 0.5s;
+    -webkit-animation: fadeIn linear 0.5s;
+    -moz-animation: fadeIn linear 0.5s;
+    -o-animation: fadeIn linear 0.5s;
+    -ms-animation: fadeIn linear 0.5s;
+  }
+
+  @keyframes fadeIn {
+    0% {opacity:0;}
+    100% {opacity:1;}
+  }
+
+  @-moz-keyframes fadeIn {
+    0% {opacity:0;}
+    100% {opacity:1;}
+  }
+
+  @-webkit-keyframes fadeIn {
+    0% {opacity:0;}
+    100% {opacity:1;}
+  }
+
+  @-o-keyframes fadeIn {
+    0% {opacity:0;}
+    100% {opacity:1;}
+  }
+
+  @-ms-keyframes fadeIn {
+    0% {opacity:0;}
+    100% {opacity:1;}
   }
 
 

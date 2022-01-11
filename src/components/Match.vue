@@ -1,12 +1,16 @@
 <template>
-  <div id="screen" class="vue-template">
-    <h3>This is just here so that the other shit moves down on the page without CSS xd and a bit more SmileyFace</h3>
-    <!-- <h3 id="title" v-if="movies">{{this.movies.data.results[0].original_title}}</h3> -->
-    <!-- <img src = "https://image.tmdb.org/t/p/w500/1g0dhYtq4irTY1GPXvft6k4YLjm.jpg"> -->
-    <!-- <p id="rating" v-if="movies">Rating: {{this.movies.data.results[0].vote_average}} out of 10</p> -->
-    <button id ="start" @click="initialBuildUp">Start Matching!</button>
-    <button id ="like" class="like" @click="like">Like</button>
-    <button id = "dislike" class="dislike" @click="changeContent">Dislike</button>
+  <div class="vue-template">
+    <div class="promo" v-if="movies">
+      <img class="image" width="100%" height="100%" :src="curr_image" />
+
+      <div class="transparent_div">
+        {{curr_title}} <br>
+        <div class="button_alignment buttons btn-group">
+          <button class="btn btn-outline-success" @click="changeMovie(true)">Like</button>
+          <button class="btn btn-outline-danger" @click="changeMovie(false)">Dislike</button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -18,7 +22,12 @@ export default {
   name: "Match",
   data() {
     return {
-      movies: []
+      movies: [],
+      curr_image: "",
+      curr_title: "",
+      curr_id: "",
+      liked_movies: [],
+      disliked_movies: []
     }
   },
   async mounted() {
@@ -29,97 +38,49 @@ export default {
         }
       })
       console.log(this.movies)
+      this.curr_image = "https://image.tmdb.org/t/p/w500" + this.movies.data.results[0].poster_path;
+      this.curr_title = this.movies.data.results[0].original_title
     } catch (e) {
       console.log(e)
     }
   },
   methods: {
-    initialBuildUp() {
-
-      let screen = document.getElementById("screen");
-
-      let title = document.createElement("h3");
-      title.id = "title";
-      title.innerText = this.movies.data.results[0].original_title;
-
-
-      let startButton = document.getElementById("start");
-      startButton.remove();
-
-      let moviePoster = document.createElement("img");
-      moviePoster.id = "poster";
-      moviePoster.src = "https://image.tmdb.org/t/p/w500" + this.movies.data.results[0].poster_path;
-
-      let rating = document.createElement("p");
-      rating.innerText = "Rating: " + this.movies.data.results[0].vote_average + " out of 10";
-
-
-      screen.appendChild(title);
-      screen.appendChild(moviePoster);
-      screen.appendChild(rating);
-
-    },
-
-    changeContent() {
+    changeMovie(like) {
+      if(counter > 9) {
+        //TODO: Axios request an das Backend mit dem Liked und Disliked Array
+        this.$router.push('/')
+      }
+      if(like) {
+        this.liked_movies.push(this.movies.data.results[counter].id)
+      } else if(!like) {
+        this.disliked_movies.push(this.movies.data.results[counter].id)
+      }
       counter++;
-
-      let title = document.getElementById("title");
-      let moviePoster = document.getElementById("poster");
-      //let rating = document.getElementById("rating");
-
-
-      /** DAS HIER FUNKTIONIERT ZWAR PRINZIPIELL, ABER IRGENDWAS IST NOCH BUGGY **/
-      if(counter > 9){
-        counter = 0;
-      /*let screen = document.getElementById("screen");
-        let like = document.getElementById("like");
-        let dislike = document.getElementById("dislike");
-
-        like.remove();
-        dislike.remove();
-        title.remove();
-        moviePoster.remove();
-        rating.remove();
-
-        let congrats = document.createElement("p");
-        congrats.innerText = "Yay you did it. Now wait for your friend to complete their matches!"
-
-        let returnButton = document.createElement("button");
-        returnButton.innerText = "Return";
-        returnButton.onclick = function(){
-            //return to landing page
-            console.log("Let me in.. LET ME IIIIIIIIIIIIIIN!!")
-        }
-
-        screen.appendChild(congrats);
-        screen.appendChild(returnButton);
-
-        //go to landing page pls mit router push blabla
-      */}
-
-
-      title.innerText = this.movies.data.results[counter].original_title;
-
-
-      moviePoster.src = "https://image.tmdb.org/t/p/w500" + this.movies.data.results[counter].poster_path;
-
-
-      //rating.innerHTML = "Rating: " + this.movies.data.results[counter].vote_average + " out of 10";
-
-
+      this.curr_image = "https://image.tmdb.org/t/p/w500" + this.movies.data.results[counter].poster_path;
+      this.curr_title = this.movies.data.results[counter].original_title
     },
-
-    like(){
-      let addToDataBase = this.movies.data.results[counter].id;
-      console.log(addToDataBase);
-      // add movie to database
-      this.changeContent();
-    }
-
   }
 }
 </script>
 
 <style scoped>
+  .promo {
+    position: relative;
+    align-content: center;
+  }
+
+
+  .transparent_div {
+    background-color: rgba(0,0,0,0.65);
+    position: absolute;
+    text-align: center;
+    height: 20%;
+    width: 100%;
+    font-family: Verdana,sans-serif;
+    color: #FFF;
+    bottom: 0;
+    z-index: 1;
+  }
+
 
 </style>

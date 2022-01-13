@@ -26,7 +26,7 @@
     <button class="btn btn-dark btn-lg btn-block button_alignment">Create</button>
   </form>
      <div class="alert alert-danger alert-dismissible fade show" v-if="password_error">
-       <strong> Error!</strong> Passwords do not match!
+       <strong> Error!</strong> {{ password_error_message }}
        <button type="button" class="btn-close" data-bs-dismiss="alert" @click="disableButton"></button>
      </div>
     <div class="alert alert-danger alert-dismissible fade show" v-if="error">
@@ -34,7 +34,6 @@
       <button type="button" class="btn-close" data-bs-dismiss="alert" @click="disableButton"></button>
     </div>
   </div>
-
 </template>
 
 <script>
@@ -48,6 +47,7 @@ export default {
       password: '',
       password_repeat: '',
       password_error: false,
+      password_error_message: '',
       error: false
     }
   },
@@ -56,11 +56,12 @@ export default {
       this.password_error = false
       if(this.password !== this.password_repeat) {
         this.password_error = true;
+        this.password_error_message = 'Passwords do not Match!'
         //console.log('here')
         return
       }
       try {
-        const response = await axios({
+        await axios({
           method: 'post',
           url: 'register',
           headers: {'Content-Type': 'application/json'},
@@ -70,15 +71,22 @@ export default {
             password: this.password
           }
         })
-        console.log(response)
         await this.$router.push('/login')
       } catch (e) {
-        this.error = true
+        if (e.response.status === 401) {
+          this.createPasswordError(e.response.data[0])
+        } else if (e.response.status === 403) {
+          this.error = true
+        }
       }
     },
     disableButton(){
       this.password_error = false;
       this.error = false
+    },
+    createPasswordError(errormsg) {
+      this.password_error = true
+      this.password_error_message= errormsg
     }
   }
 }

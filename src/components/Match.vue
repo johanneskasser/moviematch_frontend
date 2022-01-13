@@ -57,7 +57,7 @@ export default {
       this.moviesToDisplay.push(this.movies.data.results[counter].id)
       if(counter > 9) {
         counter = 0;
-        //TODO: Axios request an das Backend mit dem Liked und Disliked Array
+        //TODO: Axios request an das Backend mit dem Liked und MoviesToDisplay Array
         this.$router.push('/')
       }
       if(like) {

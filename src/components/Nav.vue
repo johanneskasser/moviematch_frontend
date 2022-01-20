@@ -12,7 +12,7 @@
       </ul>
       <ul class="nav navbar-nav flex-row float-right" v-if="user">
         <li class="nav-item">
-          <router-link to="/login" class="btn btn-outline-primary navbar_button">Previous Matches</router-link>
+          <router-link to="/yourMatches" class="btn btn-outline-primary navbar_button">Your Matches</router-link>
         </li>
         <li class="nav-item">
           <router-link to="/yourProfile" class="btn btn-outline-primary navbar_button">Your Profile</router-link>

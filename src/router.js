@@ -10,6 +10,7 @@ import InitMatch from "@/components/InitMatch";
 import Match from "@/components/Match"
 import YourProfile from "@/components/YourProfile";
 import CompletedMatches from "./components/CompletedMatches";
+import YourMatches from "@/components/YourMatches";
 
 Vue.use(Router);
 
@@ -45,19 +46,69 @@ export default new Router ({
         },
         {
             path: '/initmatch/:userID/:matchUserID/',
-            component: InitMatch
+            component: InitMatch,
+            beforeEnter: (to, from, next) => {
+                if(store.state.user === null) {
+                    next('/login');
+                } else {
+                    next();
+                }
+            }
         },
         {
             path: '/match/:userID/:matchUserID/:genreID/:init',
-            component: Match
+            component: Match,
+            beforeEnter: (to, from, next) => {
+                if(store.state.user === null) {
+                    next('/login');
+                } else {
+                    next();
+                }
+            }
+        },
+        {
+            path: '/match/:userID/:matchUserID/:init',
+            component: Match,
+            beforeEnter: (to, from, next) => {
+                if(store.state.user === null) {
+                    next('/login');
+                } else {
+                    next();
+                }
+            }
         },
         {
             path: '/yourProfile',
-            component: YourProfile
+            component: YourProfile,
+            beforeEnter: (to, from, next) => {
+                if(store.state.user === null) {
+                    next('/login');
+                } else {
+                    next();
+                }
+            }
+        },
+        {
+            path: "/yourMatches",
+            component: YourMatches,
+            beforeEnter: (to, from, next) => {
+                if(store.state.user === null) {
+                    next('/login');
+                } else {
+                    next();
+                }
+            }
         },
         {
             path: '/completedMatches',
-            component: CompletedMatches
+            component: CompletedMatches,
+            beforeEnter: (to, from, next) => {
+                if(store.state.user === null) {
+                    next('/login');
+                } else {
+                    next();
+                }
+            }
         }
     ]
 });

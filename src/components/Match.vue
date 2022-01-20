@@ -1,5 +1,19 @@
 <template>
   <div class="vue-template">
+    <content-loader
+        viewBox="0 0 476 124"
+        primaryColor="#f3f3f3"
+        secondaryColor="#cccccc"
+        v-if="movies.length === 0"
+        id="content-loader"
+    >
+      <rect x="48" y="8" rx="3" ry="3" width="88" height="6" />
+      <rect x="48" y="26" rx="3" ry="3" width="52" height="6" />
+      <rect x="0" y="56" rx="3" ry="3" width="410" height="6" />
+      <rect x="0" y="72" rx="3" ry="3" width="380" height="6" />
+      <rect x="0" y="88" rx="3" ry="3" width="178" height="6" />
+      <circle cx="20" cy="20" r="20" />
+    </content-loader>
     <div class="promo" v-if="movies">
       <img class="image" width="100%" height="100%" :src="curr_image" />
 
@@ -20,6 +34,7 @@
 
 <script>
 import axios from "axios";
+import {ContentLoader} from "vue-content-loader";
 
 let counter = 0;
 export default {
@@ -33,44 +48,78 @@ export default {
       curr_rating: "",
       liked_movies: [],
       disliked_movies: [],
-      moviesToDisplay: []
+      moviesToDisplay: [],
+      init: true
     }
+  },
+  components: {
+    ContentLoader,
   },
   async mounted() {
-    try {
-      this.movies = await axios.get('/getMovies', {
-        params: {
-          genres: this.$route.params.genreID
-        }
-      })
-      console.log(this.movies)
-      this.curr_image = "https://image.tmdb.org/t/p/w500" + this.movies.data.results[0].poster_path;
-      this.curr_title = this.movies.data.results[0].original_title;
-      this.curr_description = this.movies.data.results[0].overview;
-      this.curr_rating = this.movies.data.results[0].vote_average;
-    } catch (e) {
-      console.log(e)
+    if(this.$route.params.init === "false") {
+      this.init = false;
+      try {
+        this.movies = await axios.get('/getMoviesByID', {
+          params: {
+            requestingFriend: this.$route.params.userID,
+            requestedFriend: this.$route.params.matchUserID
+          }
+        })
+        //console.log(this.movies.data)
+        this.curr_image = "https://image.tmdb.org/t/p/w500" + this.movies.data[0].poster_path;
+        this.curr_title = this.movies.data[0].original_title;
+        this.curr_description = this.movies.data[0].overview;
+        this.curr_rating = this.movies.data[0].vote_average;
+      } catch (e) {
+        console.log(e)
+      }
+    } else {
+      try {
+        this.movies = await axios.get('/getMovies', {
+          params: {
+            genres: this.$route.params.genreID
+          }
+        })
+        console.log(this.movies)
+        this.curr_image = "https://image.tmdb.org/t/p/w500" + this.movies.data[0].poster_path;
+        this.curr_title = this.movies.data[0].original_title;
+        this.curr_description = this.movies.data[0].overview;
+        this.curr_rating = this.movies.data[0].vote_average;
+      } catch (e) {
+        console.log(e)
+      }
     }
+  console.log(this.init)
   },
   methods: {
-    changeMovie(like) {
-      this.moviesToDisplay.push(this.movies.data.results[counter].id)
-      if(counter > 9) {
+    async changeMovie(like) {
+      this.moviesToDisplay.push(this.movies.data[counter].id)
+      if (counter > 9) {
         counter = 0;
-        //TODO: Axios request an das Backend mit dem Liked und MoviesToDisplay Array
-        this.$router.push('/')
+        try {
+          console.log(this.$route.params.userID, this.$route.params.matchUserID)
+          await axios.post('/createMatch', {
+              requestingFriend: this.$route.params.userID,
+              requestedFriend: this.$route.params.matchUserID,
+              moviesToDisplay: this.moviesToDisplay,
+              likedMovies: this.liked_movies,
+              matchedBack: !this.init,
+          })
+          await this.$router.push('/')
+        } catch (e) {
+          console.log(e)
+        }
       }
-      if(like) {
-        this.liked_movies.push(this.movies.data.results[counter].id)
-
-      } else if(!like) {
-        this.disliked_movies.push(this.movies.data.results[counter].id)
+      if (like) {
+        this.liked_movies.push(this.movies.data[counter].id)
+      } else if (!like) {
+        this.disliked_movies.push(this.movies.data[counter].id)
       }
       counter++;
-      this.curr_image = "https://image.tmdb.org/t/p/w500" + this.movies.data.results[counter].poster_path;
-      this.curr_title = this.movies.data.results[counter].original_title;
-      this.curr_description = this.movies.data.results[counter].overview;
-      this.curr_rating = this.movies.data.results[counter].vote_average;
+      this.curr_image = "https://image.tmdb.org/t/p/w500" + this.movies.data[counter].poster_path;
+      this.curr_title = this.movies.data[counter].original_title;
+      this.curr_description = this.movies.data[counter].overview;
+      this.curr_rating = this.movies.data[counter].vote_average;
     },
   }
 }
@@ -155,6 +204,8 @@ export default {
     0% {opacity:0;}
     100% {opacity:1;}
   }
-
+  #content-loader {
+    margin-top: 5%;
+  }
 
 </style>

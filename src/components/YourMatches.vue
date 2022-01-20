@@ -1,0 +1,112 @@
+<template>
+  <div class="vue-template">
+    <h3>Matches</h3>
+    <b-card no-body>
+      <b-tabs content-class="mt-3" align="center">
+        <b-tab title="Pending Matches" @click="getMatches(false)" active>
+            <div class="container overflow-auto pre-scrollable" v-if="this.dataArrived">
+              <div v-for="(user,index) in this.userMatched" :key="user.username" class="alert alert-info"> <!-- HERE IS A BUG -->
+                <p>
+                  Name: {{user.username}} <br> Email: {{user.email}}
+                </p>
+                <div class="container btn-group">
+                  <button type="button" class="btn btn-outline-success" @click="manageMatch(true, index)">Match Back</button>
+                  <button type="button" class="btn btn-outline-danger" @click="manageMatch(false, index)">Decline</button>
+                </div>
+              </div>
+              <div class="alert alert-danger" v-if="noResult">
+                <p>
+                  <strong> Oh No! </strong> Seems that there are no friend requests for you!
+                </p>
+              </div>
+            </div>
+        </b-tab>
+        <b-tab title="Previous Matches" @click="getMatches(true)">
+          <div class="container overflow-auto pre-scrollable">
+            <div v-for="(user, index) in this.userMatched" :key="user.username" class="alert alert-info">
+              <p>
+                Name: {{user.username}} <br> Email: {{user.email}}
+              </p>
+              <div class="container btn-group">
+                <button type="button" class="btn btn-outline-success" @click="viewMatches(index)">View Results</button>
+              </div>
+            </div>
+            <div class="alert alert-danger" v-if="this.userMatched.length === 0">
+              <p>
+                <strong> Oh No! </strong> Seems that there are no friend requests for you!
+              </p>
+            </div>
+          </div>
+        </b-tab>
+      </b-tabs>
+    </b-card>
+  </div>
+
+
+</template>
+
+<script>
+import {mapGetters} from "vuex";
+import axios from "axios";
+
+export default {
+  name: "YourMatches",
+  computed: {
+    ...mapGetters({
+      user: 'user'
+    })
+  },
+  data() {
+    return {
+      matches: [],
+      userMatched: [],
+      dataArrived: false,
+      noResult: true,
+    }
+  },
+  beforeMount() {
+    this.getMatches(false)
+  },
+  methods: {
+    async getMatches(matchedBack) {
+      this.userMatched = []
+      this.matches = []
+      this.dataArrived = false
+      try {
+        const result = await axios.get('/getMatches', {
+          params: {
+            requestedFriend: this.user._id,
+            matchedBack: matchedBack
+          }
+        })
+        this.matches = result.data;
+        for (let i = 0; i < this.matches.length; i++) {
+          const result = await axios.get('getUser', {
+            params: {id: this.matches[i].requestingFriend},
+          })
+          this.userMatched[i] = result.data
+          this.noResult = false
+        }
+        this.dataArrived = true;
+        console.log(this.matches, this.userMatched)
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async manageMatch(accepted, index) {
+      if(accepted) {
+        await this.$router.push('/match/:userID/:matchUserID/:init'.replace(':userID', this.matches[index].requestingFriend).replace(':matchUserID', this.user._id).replace(':init', "false"))
+      }
+    },
+    async viewMatches(index) {
+      console.log(index)
+      await this.$router.push("/completedMatches")
+    }
+  }
+
+}
+</script>
+
+<style scoped>
+
+</style>

@@ -65,7 +65,7 @@ export default {
             requestedFriend: this.$route.params.matchUserID
           }
         })
-        //console.log(this.movies.data)
+        console.log(this.movies.data)
         this.curr_image = "https://image.tmdb.org/t/p/w500" + this.movies.data[0].poster_path;
         this.curr_title = this.movies.data[0].original_title;
         this.curr_description = this.movies.data[0].overview;
@@ -89,15 +89,15 @@ export default {
         console.log(e)
       }
     }
-  console.log(this.init)
+  //console.log(this.init)
   },
   methods: {
     async changeMovie(like) {
       this.moviesToDisplay.push(this.movies.data[counter].id)
-      if (counter > 9) {
+      if (counter > 8) {
         counter = 0;
         try {
-          console.log(this.$route.params.userID, this.$route.params.matchUserID)
+          //console.log(this.$route.params.userID, this.$route.params.matchUserID)
           await axios.post('/createMatch', {
               requestingFriend: this.$route.params.userID,
               requestedFriend: this.$route.params.matchUserID,

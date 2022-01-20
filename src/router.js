@@ -9,6 +9,7 @@ import store from "@/store/vuex";
 import InitMatch from "@/components/InitMatch";
 import Match from "@/components/Match"
 import YourProfile from "@/components/YourProfile";
+import CompletedMatches from "./components/CompletedMatches";
 
 Vue.use(Router);
 
@@ -53,6 +54,10 @@ export default new Router ({
         {
             path: '/yourProfile',
             component: YourProfile
+        },
+        {
+            path: '/completedMatches',
+            component: CompletedMatches
         }
     ]
 });

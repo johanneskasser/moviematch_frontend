@@ -9,7 +9,7 @@
         </tr>
         <tr v-for="(movie, index) in this.movies.data" :key="movie" >
             <td><img width=250 :src="movies.data[index].poster_path"><br><p><b>{{movies.data[index].original_title}}</b></p></td>
-            <td>{{movies.data[index].overview}}</td>
+            <td>{{movies.data[index].overview}}<br><br><a v-if="movies.data[index].homepage !== ''" :href="movies.data[index].homepage" target="_blank">WATCH TRAILER</a></td>
             <td>Rating: {{movies.data[index].vote_average}}/10</td>
         </tr>
       </table>

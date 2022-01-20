@@ -100,7 +100,7 @@ export default new Router ({
             }
         },
         {
-            path: '/completedMatches',
+            path: '/completedMatches/:otherUser',
             component: CompletedMatches,
             beforeEnter: (to, from, next) => {
                 if(store.state.user === null) {

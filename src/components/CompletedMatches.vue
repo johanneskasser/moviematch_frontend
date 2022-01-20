@@ -18,8 +18,33 @@
 </template>
 
 <script>
+import {mapGetters} from "vuex";
+import axios from "axios";
+
 export default {
   name: "CompletedMatches",
+  computed: {
+    ...mapGetters({
+      user: 'user'
+    })
+  },
+  data() {
+    return {
+      movies: [],
+    }
+  },
+  async mounted() {
+    const loggedInUser = this.user._id;
+    const otherUser = this.$route.params.otherUser
+
+    this.movies = await axios.get('/getCommonMovies', {
+      params: {
+        requestingFriend: loggedInUser,
+        requestedFriend: otherUser
+      }
+    })
+    console.log(this.movies)
+  }
 }
 </script>
 

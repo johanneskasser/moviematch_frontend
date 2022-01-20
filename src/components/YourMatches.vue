@@ -100,7 +100,13 @@ export default {
     },
     async viewMatches(index) {
       console.log(index)
-      await this.$router.push("/completedMatches")
+      let otherUser = ''
+      if(this.matches[index].requestedFriend === this.user._id) {
+        otherUser = this.matches[index].requestingFriend;
+      } else {
+        otherUser = this.matches[index].requestedFriend
+      }
+      await this.$router.push("/completedMatches/:otherUser".replace(':otherUser', otherUser))
     }
   }
 

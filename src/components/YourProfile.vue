@@ -1,7 +1,10 @@
 <template>
   <div class="vue-template">
-    <h3>Your Profile</h3>
-    <p>Name: {{this.user.username}}</p>
+    <h3 class="headline"> Your Profile Card : </h3>
+    <p class="username">Username: {{this.user.username}}<img class="blankPic" src="../resources/userimage.png" height="50" width="50" alt="blankUserImage">
+    </p>
+    <p class="email">E-Mail: {{this.user.email}} </p>
+    <p> In case of any issues and further questions, please do not hesitate to contact us via e-mail : <a href="mailto:noreply.moviematch@gmail.com">noreply.moviematch@gmail.com</a> </p>
   </div>
 
 </template>
@@ -20,5 +23,10 @@ export default {
 </script>
 
 <style scoped>
+.headline {font-family: "Franklin Gothic Heavy"}
+.username {font-family: "Franklin Gothic Heavy"}
+.email {font-family: "Franklin Gothic Heavy"}
+.blankPic {
+  position: relative; left: 140px ; top: 5px  }
 
 </style>

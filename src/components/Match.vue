@@ -18,7 +18,7 @@
       <img class="image" width="100%" height="100%" :src="curr_image" />
 
       <div class="transparent_div">
-        {{curr_title}} <br><br>
+        <p id="movietitle"><strong>{{curr_title}}</strong> <br><br> </p>
         <div class="description container overflow-auto pre-scrollable">
           <p>{{curr_description}}</p>
         </div>
@@ -29,6 +29,10 @@
         <div class = "container"><br>Rating: {{curr_rating}} out of 10</div>
       </div>
     </div>
+    <div class="alert alert-danger alert-dismissible fade show" v-if="error">
+      <strong> Error!</strong> The two of you have already been matched! Please delete your previous match to continue! (This issue is beeing worked on)
+      <button type="button" class="btn-close" data-bs-dismiss="alert" @click="disableButton"></button>
+    </div>
   </div>
 </template>
 
@@ -36,7 +40,9 @@
 import axios from "axios";
 import {ContentLoader} from "vue-content-loader";
 
+
 let counter = 0;
+
 export default {
   name: "Match",
   data() {
@@ -49,11 +55,21 @@ export default {
       liked_movies: [],
       disliked_movies: [],
       moviesToDisplay: [],
-      init: true
+      init: true,
+      error: false,
+      maxMovies: 10,
     }
   },
   components: {
     ContentLoader,
+  },
+  beforeRouteLeave (to, from, next) {
+    const answer = window.confirm('Do you really want to leave? Your unsaved changes will be lost!')
+    if(answer) {
+      next()
+    } else {
+      next(false)
+    }
   },
   async mounted() {
     if(this.$route.params.init === "false") {
@@ -66,6 +82,7 @@ export default {
           }
         })
         console.log(this.movies.data)
+        this.maxMovies = this.movies.data.length - 1
         this.curr_image = "https://image.tmdb.org/t/p/w500" + this.movies.data[0].poster_path;
         this.curr_title = this.movies.data[0].original_title;
         this.curr_description = this.movies.data[0].overview;
@@ -94,7 +111,7 @@ export default {
   methods: {
     async changeMovie(like) {
       this.moviesToDisplay.push(this.movies.data[counter].id)
-      if (counter > 8) {
+      if(!(counter < this.maxMovies)) {
         counter = 0;
         try {
           //console.log(this.$route.params.userID, this.$route.params.matchUserID)
@@ -107,7 +124,7 @@ export default {
           })
           await this.$router.push('/')
         } catch (e) {
-          console.log(e)
+          this.error = true;
         }
       }
       if (like) {
@@ -121,17 +138,26 @@ export default {
       this.curr_description = this.movies.data[counter].overview;
       this.curr_rating = this.movies.data[counter].vote_average;
     },
+    disableButton(){
+      this.error = false
+    }
   }
 }
 </script>
 
 <style scoped>
 
-  /* ToDo: Font sizes for title and description (careful to not contract cancer) */
+  #movietitle {
+    padding-top: 5%;
+    font-family: "Lucida Console", "Courier New", monospace;
+    font-size: large;
+  }
 
   .description {
     height: 60%;
     position: center;
+    text-align: justify;
+    hyphens: auto;
   }
 
   .promo {

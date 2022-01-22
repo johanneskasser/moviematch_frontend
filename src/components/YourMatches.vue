@@ -10,13 +10,13 @@
                   Name: {{user.username}} <br> Email: {{user.email}}
                 </p>
                 <div class="container btn-group">
-                  <button type="button" class="btn btn-outline-success" @click="manageMatch(true, index)">Match Back</button>
-                  <button type="button" class="btn btn-outline-danger" @click="manageMatch(false, index)">Decline</button>
+                  <button type="button" class="btn btn-outline-success" @click="manageMatch(false, true, index)">Match Back</button>
+                  <button type="button" class="btn btn-outline-danger" @click="manageMatch(false, false, index)">Decline</button>
                 </div>
               </div>
-              <div class="alert alert-danger" v-if="noResult">
+              <div class="alert alert-danger" v-if="this.userMatched.length === 0">
                 <p>
-                  <strong> Oh No! </strong> Seems that there are no friend requests for you!
+                  <strong> Oh No! </strong> Seems that there are no match requests for you!
                 </p>
               </div>
             </div>
@@ -29,11 +29,12 @@
               </p>
               <div class="container btn-group">
                 <button type="button" class="btn btn-outline-success" @click="viewMatches(index)">View Results</button>
+                <button type="button" class="btn btn-outline-danger" @click="manageMatch(true ,false , index)">Delete Match</button>
               </div>
             </div>
             <div class="alert alert-danger" v-if="this.userMatched.length === 0">
               <p>
-                <strong> Oh No! </strong> Seems that there are no friend requests for you!
+                <strong> Oh No! </strong> Seems that there are no previous maches!
               </p>
             </div>
           </div>
@@ -81,21 +82,32 @@ export default {
         })
         this.matches = result.data;
         for (let i = 0; i < this.matches.length; i++) {
+          let search_user = this.matches[i].requestingFriend;
+          if(this.matches[i].requestingFriend === this.user._id) {
+            search_user = this.matches[i].requestedFriend;
+          }
           const result = await axios.get('getUser', {
-            params: {id: this.matches[i].requestingFriend},
+            params: {id: search_user},
           })
           this.userMatched[i] = result.data
           this.noResult = false
         }
         this.dataArrived = true;
-        console.log(this.matches, this.userMatched)
+        //console.log(this.matches, this.userMatched)
       } catch (e) {
         console.log(e);
       }
     },
-    async manageMatch(accepted, index) {
+    async manageMatch(pending, accepted, index) {
       if(accepted) {
         await this.$router.push('/match/:userID/:matchUserID/:init'.replace(':userID', this.matches[index].requestingFriend).replace(':matchUserID', this.user._id).replace(':init', "false"))
+      } else {
+        await axios.delete('/deleteMatch', {
+          params: {
+            _id: this.matches[index]._id
+          }
+        })
+        await this.getMatches(pending)
       }
     },
     async viewMatches(index) {

@@ -14,20 +14,9 @@ import YourMatches from "@/components/YourMatches";
 
 Vue.use(Router);
 
-export default new Router ({
+const router = new Router ({
     mode: 'history',
     routes: [
-        {
-            path: '/',
-            component: Home,
-            beforeEnter: (to, from, next) => {
-                if(store.state.user === null) {
-                    next('/login');
-                } else {
-                    next();
-                }
-            }
-        },
         {
             path: '/login',
             component: Login
@@ -45,70 +34,49 @@ export default new Router ({
             component: Reset
         },
         {
+            path: '/',
+            component: Home,
+            beforeEnter: guard
+        },
+        {
             path: '/initmatch/:userID/:matchUserID/',
             component: InitMatch,
-            beforeEnter: (to, from, next) => {
-                if(store.state.user === null) {
-                    next('/login');
-                } else {
-                    next();
-                }
-            }
+            beforeEnter: guard
         },
         {
             path: '/match/:userID/:matchUserID/:genreID/:init',
             component: Match,
-            beforeEnter: (to, from, next) => {
-                if(store.state.user === null) {
-                    next('/login');
-                } else {
-                    next();
-                }
-            }
+            beforeEnter: guard
         },
         {
             path: '/match/:userID/:matchUserID/:init',
             component: Match,
-            beforeEnter: (to, from, next) => {
-                if(store.state.user === null) {
-                    next('/login');
-                } else {
-                    next();
-                }
-            }
+            beforeEnter: guard
         },
         {
             path: '/yourProfile',
             component: YourProfile,
-            beforeEnter: (to, from, next) => {
-                if(store.state.user === null) {
-                    next('/login');
-                } else {
-                    next();
-                }
-            }
+            beforeEnter: guard
         },
         {
             path: "/yourMatches",
             component: YourMatches,
-            beforeEnter: (to, from, next) => {
-                if(store.state.user === null) {
-                    next('/login');
-                } else {
-                    next();
-                }
-            }
+            beforeEnter: guard
         },
         {
             path: '/completedMatches/:otherUser',
             component: CompletedMatches,
-            beforeEnter: (to, from, next) => {
-                if(store.state.user === null) {
-                    next('/login');
-                } else {
-                    next();
-                }
-            }
+            beforeEnter: guard
         }
     ]
 });
+
+function guard(to,from,next) {
+    if(store.state.user === null) {
+        next('/login');
+    } else {
+        next();
+    }
+}
+
+export default router;

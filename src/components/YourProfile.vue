@@ -23,10 +23,10 @@ export default {
 </script>
 
 <style scoped>
-.headline {font-family: "Franklin Gothic Heavy"}
-.username {font-family: "Franklin Gothic Heavy"}
-.email {font-family: "Franklin Gothic Heavy"}
+.headline {font-family: "Franklin Gothic Heavy",serif}
+.username {font-family: "Franklin Gothic Heavy",serif}
+.email {font-family: "Franklin Gothic Heavy",serif}
 .blankPic {
-  position: relative; left: 140px ; top: 5px  }
+  position: relative; left: 50% ; top: 5px  }
 
 </style>
